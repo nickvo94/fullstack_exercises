@@ -1,0 +1,20 @@
+title new_note_spa
+
+note over browser:
+users write something into the text field
+and clicking the submit button.
+end note
+
+note over browser:
+The form on submit will call 
+a function in Javascript code 
+to render notes again with new note.
+end note
+
+note over browser:
+Another function will be used to send 
+new note to the server, no need 
+to reload the web page.
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
