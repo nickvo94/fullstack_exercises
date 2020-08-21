@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
@@ -47,7 +47,7 @@ const Total = (props) =>  {
 }
 
 const App = () => {
-  const course = {
+   const course = {
     name: 'Half Stack application development',
     parts: [
       {
