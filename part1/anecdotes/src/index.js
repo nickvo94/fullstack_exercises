@@ -8,7 +8,7 @@ const Button = ({handleClick, text}) => {
 }
 
 const Vote = ({value}) => {
-  console.log("value", value)
+  //console.log("value", value)
   return(
     <div>
       has {value} vote(s)
@@ -22,6 +22,7 @@ const AnecdoteDisplay = ({text, header, value}) => {
       <h1>{header}</h1>
       {text}
       <Vote value={value}/>
+      <br></br>
     </div>
   )
 }
@@ -63,7 +64,7 @@ const App = (props) => {
     const copyPoints = [...voted];
     copyPoints[selected] += 1
     setVoted(copyPoints)
-    console.log("selected",selected, voted)
+    //console.log("selected",selected, voted)
   }
 
   const getRandomInt = (min, max) => {
@@ -79,9 +80,8 @@ const App = (props) => {
           header={'Anecdote of the day'} 
           value={voted[selected]}
         />
-        <br></br>
-        <Button handleClick={() => nextAnecdote()} text="next"/>
-        <Button handleClick={() => handleVote()} text="vote"/>
+        <Button handleClick={nextAnecdote} text="next"/>
+        <Button handleClick={handleVote} text="vote"/>
         <MostVotedAnecdote anecdotes={props.anecdotes} voted={voted}/>
     </div> 
   )
