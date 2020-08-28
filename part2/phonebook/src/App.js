@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 import personService from './services/persons'
 
 const App = () => {
@@ -10,50 +10,61 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     console.log('effect')
+    fetchAll()
+  }, [])
+  console.log('render', persons.length, 'persons')
+
+  const fetchAll = () => {
     personService
       .getAll()
         .then(allPersons => {
           setPersons(allPersons)
-        })      
-  }, [])
-  console.log('render', persons.length, 'persons')
+        })
+  }
 
   const addName = (event) => {
     event.preventDefault()
-    const existedPerson = persons.find(p => p.name.includes(newName) ? p : '')
-    console.log('existed', existedPerson)
+    if (newName) {
+      const existedPerson = persons.find(p => p.name.includes(newName) ? p : '')
+      console.log('existed', existedPerson)
 
-    const personObj = {
-      name: newName,
-      number: newNumber
-    }
-
-    if (existedPerson !== undefined) {
-      const confirmed = 
-        window.confirm(
-          `${newName} is already added to phonebook. Do you want to replace the phone number ?`
-        )
-      if (confirmed) {
-        personService
-          .update(existedPerson.id, personObj)
-            .then(updatedPerson => {
-              setPersons(persons.map(p => p.id === existedPerson.id ? updatedPerson : p))
-            })
+      const personObj = {
+        name: newName,
+        number: newNumber
       }
+
+      if (existedPerson !== undefined) {
+        const confirmed = 
+          window.confirm(
+            `${newName} is already added to phonebook. Do you want to replace the phone number ?`
+          )
+        if (confirmed) {
+          personService
+            .update(existedPerson.id, personObj)
+              .then(updatedPerson => {
+                setPersons(persons.map(p => p.id === existedPerson.id ? updatedPerson : p))
+              })
+                .catch(error => {
+                  handleNotification({class: 'error', text: `Person '${personObj.name}' is not existed`})   
+                })
+        }
+      }
+      else {
+        personService
+          .create(personObj)
+            .then(addedPerson => {
+              console.log(addedPerson)
+              setPersons(persons.concat(addedPerson))
+              handleNotification({class: 'success', text: `Added ${addedPerson.name} `})
+            })   
+      }
+      setNewName('')
+      setNewNumber('')
     }
-    else {
-      personService
-        .create(personObj)
-          .then(addedPerson => {
-            console.log(addedPerson)
-            setPersons(persons.concat(addedPerson))
-          })   
-    }
-    setNewName('')
-    setNewNumber('') 
   }
 
   const deleteName = (event) => {
@@ -78,6 +89,26 @@ const App = () => {
               setPersons(removed)
             }
           })
+            .catch(error => {
+              handleNotification({class: 'error', text: `Person '${nameObj.name}' was already removed from server`})   
+            })
+    }
+  }
+
+  const handleNotification = (message) => {
+    if (message) {
+      console.log('handle notification...' , message)
+      if (message.class === 'error') {
+        setNotification(message)
+        fetchAll()
+      }
+      else if (message.class === 'success') {
+        setNotification(message)
+      }
+
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     }
   }
   
@@ -110,7 +141,8 @@ const App = () => {
 
   return (
     <div style={{margin: '10px'}}>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={notification} />
       <Filter handleSearch={handleSearch}/>
       <h2>Add a new contact</h2>
       <PersonForm formComponents={formComponents}/>
