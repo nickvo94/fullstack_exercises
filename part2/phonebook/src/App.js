@@ -49,7 +49,7 @@ const App = () => {
                 setPersons(persons.map(p => p.id === existedPerson.id ? updatedPerson : p))
               })
                 .catch(error => {
-                  handleNotification({class: 'error', text: `Person '${personObj.name}' is not existed`})   
+                  handleNotification({class: 'error', text: `${error.response.data.error}`})   
                 })
         }
       }
@@ -60,6 +60,10 @@ const App = () => {
               console.log(addedPerson)
               setPersons(persons.concat(addedPerson))
               handleNotification({class: 'success', text: `Added ${addedPerson.name} `})
+            })
+            .catch(error => {
+              console.log('error', error.response.data)
+              handleNotification({class: 'error', text: `${error.response.data.error}`})   
             })   
       }
       setNewName('')
@@ -69,7 +73,7 @@ const App = () => {
 
   const deleteName = (event) => {
     console.log(event.target.id)
-    const id = Number(event.target.id)
+    const id = event.target.id
     const nameObj = persons.find(p => p.id === id)
     console.log(persons, nameObj)
 
@@ -90,7 +94,8 @@ const App = () => {
             }
           })
             .catch(error => {
-              handleNotification({class: 'error', text: `Person '${nameObj.name}' was already removed from server`})   
+              console.log('error', error.response.data)
+              handleNotification({class: 'error', text: `${error.response.data.error}`})   
             })
     }
   }
