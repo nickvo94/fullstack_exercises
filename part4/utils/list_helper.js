@@ -49,14 +49,14 @@ const getMostBlogs = (blogs) => {
       return obj
     }).maxBy('blogs')
 
-    console.log(result)
+    //console.log(result)
     return result
   }
   return null  
 }
 
 const getMostLikes = (blogs) => {
-  if ( blogs ) {
+  if ( blogs.length > 0 ) {
     let result = _(blogs)
     .groupBy('author')
     .map(function(item, itemId) {
@@ -66,7 +66,7 @@ const getMostLikes = (blogs) => {
       return obj
     }).maxBy('likes')
     
-    console.log(result)
+    //console.log(result)
     return result
   }
   return null
