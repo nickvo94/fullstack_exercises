@@ -3,8 +3,12 @@ const mongoose = require('mongoose')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
+require('dotenv')
 
 const Blog = require('../models/blog')
+
+const base = {'Authorization': process.env.TOKEN_TEST, 
+    'Content-Type': 'application/json'};
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -52,6 +56,7 @@ describe('posting blog tests', () => {
       
         await api
           .post('/api/blogs')
+          .set(base)
           .send(newBlog)
           .expect(201)
           .expect('Content-Type', /application\/json/)
@@ -64,6 +69,19 @@ describe('posting blog tests', () => {
           'testing post blog'
         )
     })
+
+    test('add an unauthorized blog ', async () => {
+        const newBlog = {
+            title: "testing none like value",
+            author: "Meri", 
+            url: "https://test.com/"
+        }
+      
+        const response = await api
+          .post('/api/blogs')
+          .send(newBlog)
+          .expect(401)
+    })
     
     test('add a none like value blog added ', async () => {
         const newBlog = {
@@ -74,6 +92,7 @@ describe('posting blog tests', () => {
       
         const response = await api
           .post('/api/blogs')
+          .set(base)
           .send(newBlog)
           .expect(201)
           .expect('Content-Type', /application\/json/)
@@ -82,13 +101,14 @@ describe('posting blog tests', () => {
         expect(result.likes).toBe(0)
     })
 
-    test('add a none like value blog added ', async () => {
+    test('add a missing required field blog', async () => {
         const newBlog = {
             author: "Mori",
         }
       
         const response = await api
           .post('/api/blogs')
+          .set(base)
           .send(newBlog)
           .expect(400)
     })
@@ -103,6 +123,7 @@ describe('deletion blog tests', () => {
     
         await api
           .delete(`/api/blogs/${blogToDelete.id}`)
+          .set(base)
           .expect(204)
     
         const blogsAtEnd = await helper.blogsInDb()

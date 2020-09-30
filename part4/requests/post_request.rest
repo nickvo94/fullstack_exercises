@@ -3,8 +3,8 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1payIsImlkIjoiNWY3MWQ3YmFlYmQ4MmUwMWM0NWRmOTAyIiwiaWF0IjoxNjAxNDAzODU3fQ.16LHoUplRzC_tTa92uYY2vgMfFB2f73_dEi991Mjrak
 
 {
-    "title": "Math",
-    "author": "Geogre",
+    "title": "Chemistry",
+    "author": "Pekka",
     "url": "testing.com",
     "likes": "5"
 }
