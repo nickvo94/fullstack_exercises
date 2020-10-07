@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -52,33 +53,67 @@ const App = () => {
 
   }
 
-  const LoginForm = () => (
-    <form onSubmit={handleLogin}>
+  const handleLogout = (event) => {
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser(null)
+    setUsername('')
+    setPassword('')
+  }
+
+  const handleCreateBlog = (event) => {
+    console.log(event)
+  }
+
+  const NewBlogForm = () => (
+    <form onSubmit={handleCreateBlog}>
+      <h2>create new</h2>
       <div>
-        username
+        title
           <input
           type="text"
           value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
+          name="title"
+          onChange={}
         />
       </div>
       <div>
-        password
+        author
+          <input
+          type="text"
+          value={username}
+          name="author"
+          onChange={}
+        />
+      </div>
+      <div>
+        url
           <input
           type="password"
           value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
+          name="url"
+          onChange={}
         />
       </div>
-      <button type="submit">login</button>
-    </form>      
+      <button type="submit">create</button>
+    </form> 
+
   )
+
+  const loginFormComponents = { 
+    handleLogin, 
+    setUsername, 
+    setPassword,
+    username,
+    password 
+  }
 
   const BlogForm = () => (
     <div>
-      <p>{user.name} logged-in</p>
+      <p>
+        {user.name} logged-in 
+        <button type="submit" onClick={handleLogout}>logout</button> 
+      </p>
+      
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
@@ -88,7 +123,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      {user === null && LoginForm()}
+      {user === null && <LoginForm props={loginFormComponents} /> }
       {user !== null && BlogForm()}
     </div>
   )
