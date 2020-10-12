@@ -31,7 +31,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log('logging in with', username, password)
+    //console.log('logging in with', username, password)
 
     try {
       const user = await loginService.login({
@@ -48,7 +48,9 @@ const App = () => {
       setPassword('')
 
     } catch (exception) {
-      handleNotification({class: 'error', text: 'Wrong credentials'})
+      let err = exception.response.data.error ? exception.response.data.error : exception.response.statusText
+      console.log('exception ', err, exception.response)
+      handleNotification({class: 'error', text: err})
     }
 
   }
@@ -65,7 +67,8 @@ const App = () => {
     console.log(newBlog)
 
     try {
-      await blogService.create(newBlog)
+      const added = await blogService.create(newBlog)
+      handleNotification({class: 'success', text: `a new blog ${added.title} by ${added.author} added` })
     } catch (e) {
       console.log('catch error' , e)
       handleNotification({class: 'error', text: e.message})
