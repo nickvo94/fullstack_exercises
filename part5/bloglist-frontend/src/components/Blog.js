@@ -1,7 +1,7 @@
 import React from 'react'
 import Togglable from './Togglable'
 
-const Blog = ({ blog, handleUpdateBlog }) => {
+const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -16,6 +16,11 @@ const Blog = ({ blog, handleUpdateBlog }) => {
     handleUpdateBlog(updateBlog)
   }
 
+  const handleRemove = (removingBlog) => {
+    //console.log('updating blog ', updateBlog)
+    handleDeleteBlog(removingBlog)
+  }
+
   return (
   <div style={blogStyle}>
     <div>
@@ -26,7 +31,10 @@ const Blog = ({ blog, handleUpdateBlog }) => {
       <p>togglable view</p>
       <p>{blog.url}</p>
       <p>{blog.likes} <button type="submit" onClick={() => handleLike(blog)} >like</button> </p>
-      <p>{blog.user ? blog.user.username : ''}</p>
+      <p>{blog.user ? blog.user.username  : ''}</p>
+      {blog.user && blog.user.username === username ? 
+      <button type="submit" onClick={() => handleRemove(blog)} >remove</button> : ''}
+      <br></br>
     </Togglable>
   </div>
   )

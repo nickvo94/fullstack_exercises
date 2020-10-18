@@ -77,6 +77,7 @@ const App = () => {
     try {
       const added = await blogService.create(newBlog)
       handleNotification({class: 'success', text: `a new blog ${added.title} by ${added.author} added` })
+      fetchAll()
     } catch (e) {
       console.log('catch error' , e)
       handleNotification({class: 'error', text: e.message})
@@ -89,13 +90,29 @@ const App = () => {
 
     try {
       const updated = await blogService.update(newBlog)
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
+      fetchAll()
       handleNotification({class: 'success', text: `a new blog ${updated.title} by ${updated.author} updated` })
     } catch (e) {
       console.log('catch error' , e)
       handleNotification({class: 'error', text: e.message})
+    }   
+    
+  }
+
+  const handleDeleteBlog = async (blog) => {
+    //console.log(newBlog)
+    const confirmed = window.confirm(`Are you sure to delete the blog by author ${blog.author} !?`)
+    if (confirmed) {
+      try {
+        const id = blog.id
+        const deleted = await blogService.deleteBlog(id)
+        fetchAll()
+        handleNotification({class: 'success', text: `the blog is deleted` })
+      } catch (e) {
+        console.log('catch error' , e)
+        handleNotification({class: 'error', text: e.message})
+      }
+
     }   
     
   }
@@ -134,7 +151,7 @@ const App = () => {
         <NewBlogForm handleCreateBlog={handleCreateBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleUpdateBlog={handleUpdateBlog} />
+        <Blog key={blog.id} blog={blog} handleUpdateBlog={handleUpdateBlog} username={user.username} handleDeleteBlog={handleDeleteBlog} />
       )}
     </div>
   )
