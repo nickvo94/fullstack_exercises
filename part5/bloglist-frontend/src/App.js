@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -10,11 +10,13 @@ import NewBlogForm from './components/NewBlogForm'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   //const [newBlog, setNewBlog] = useState({title: '', author : '' , url: ''})
   //const [title, setTitle] = useState(null)
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     fetchAll()
@@ -30,7 +32,7 @@ const App = () => {
   }, [])
 
   const fetchAll = () => {
-    blogService.getAll().then(blogs =>{
+    blogService.getAll().then(blogs => {
       blogs.sort((blog1, blog2) => Number(blog2.likes) - Number(blog1.likes) )
       return setBlogs( blogs )
     })
@@ -48,22 +50,22 @@ const App = () => {
 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
 
     } catch (exception) {
-      let err = exception.response.data.error ? 
+      let err = exception.response.data.error ?
         exception.response.data.error : exception.response.statusText
       console.log('exception ', err, exception.response)
-      handleNotification({class: 'error', text: err})
+      handleNotification({ class: 'error', text: err })
     }
 
   }
 
-  const handleLogout = (event) => {
+  const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
     setUsername('')
@@ -76,13 +78,14 @@ const App = () => {
 
     try {
       const added = await blogService.create(newBlog)
-      handleNotification({class: 'success', text: `a new blog ${added.title} by ${added.author} added` })
+      handleNotification({ class: 'success', text: `a new blog ${added.title} by ${added.author} added` })
       fetchAll()
+      blogFormRef.current.toggleVisibility()
     } catch (e) {
       console.log('catch error' , e)
-      handleNotification({class: 'error', text: e.message})
-    }   
-    
+      handleNotification({ class: 'error', text: e.message })
+    }
+
   }
 
   const handleUpdateBlog = async (newBlog) => {
@@ -91,12 +94,12 @@ const App = () => {
     try {
       const updated = await blogService.update(newBlog)
       fetchAll()
-      handleNotification({class: 'success', text: `a new blog ${updated.title} by ${updated.author} updated` })
+      handleNotification({ class: 'success', text: `a new blog ${updated.title} by ${updated.author} updated` })
     } catch (e) {
       console.log('catch error' , e)
-      handleNotification({class: 'error', text: e.message})
-    }   
-    
+      handleNotification({ class: 'error', text: e.message })
+    }
+
   }
 
   const handleDeleteBlog = async (blog) => {
@@ -105,16 +108,16 @@ const App = () => {
     if (confirmed) {
       try {
         const id = blog.id
-        const deleted = await blogService.deleteBlog(id)
+        await blogService.deleteBlog(id)
         fetchAll()
-        handleNotification({class: 'success', text: `the blog is deleted` })
+        handleNotification({ class: 'success', text: 'the blog is deleted' })
       } catch (e) {
         console.log('catch error' , e)
-        handleNotification({class: 'error', text: e.message})
+        handleNotification({ class: 'error', text: e.message })
       }
 
-    }   
-    
+    }
+
   }
 
   const handleNotification = (message) => {
@@ -133,25 +136,29 @@ const App = () => {
     }
   }
 
-  const loginFormComponents = { 
-    handleLogin, 
-    setUsername, 
+  const loginFormComponents = {
+    handleLogin,
+    setUsername,
     setPassword,
     username,
-    password 
+    password
   }
 
   const BlogForm = () => (
     <div>
       <p>
-        {user.name} logged-in 
-        <button type="submit" onClick={handleLogout}>logout</button> 
+        {user.name} logged-in
+        <button type="submit" onClick={handleLogout}>logout</button>
       </p>
-      <Togglable buttonLabel="create new blog 2">
+      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <NewBlogForm handleCreateBlog={handleCreateBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleUpdateBlog={handleUpdateBlog} username={user.username} handleDeleteBlog={handleDeleteBlog} />
+        <Blog key={blog.id} blog={blog}
+          handleUpdateBlog={handleUpdateBlog}
+          username={user.username}
+          handleDeleteBlog={handleDeleteBlog}
+        />
       )}
     </div>
   )
@@ -161,10 +168,6 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={message} />
       {user === null && <LoginForm props={loginFormComponents} /> }
-      <Togglable buttonLabel="create new blog 1">
-      <p>togglable</p>
-        <NewBlogForm handleCreateBlog={handleCreateBlog} />
-      </Togglable>
       {user !== null && BlogForm()}
     </div>
   )

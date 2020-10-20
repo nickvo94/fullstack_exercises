@@ -11,7 +11,7 @@ const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
   }
 
   const handleLike = (likedBlog) => {
-    const updateBlog = {...likedBlog, likes: likedBlog.likes +1}
+    const updateBlog = { ...likedBlog, likes: likedBlog.likes +1 }
     console.log('updating blog ', updateBlog)
     handleUpdateBlog(updateBlog)
   }
@@ -22,21 +22,21 @@ const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
   }
 
   return (
-  <div style={blogStyle}>
-    <div>
-      {blog.title} {blog.author}
+    <div style={blogStyle}>
+      <div>
+        {blog.title} {blog.author}
+      </div>
+
+      <Togglable buttonLabel="view" buttonOffLabel="hide">
+        <p>togglable view</p>
+        <p>{blog.url}</p>
+        <p>{blog.likes} <button type="submit" onClick={() => handleLike(blog)} >like</button> </p>
+        <p>{blog.user ? blog.user.username  : ''}</p>
+        {blog.user && blog.user.username === username ?
+          <button type="submit" onClick={() => handleRemove(blog)} >remove</button> : ''}
+        <br></br>
+      </Togglable>
     </div>
-    
-    <Togglable buttonLabel="view" buttonOffLabel="hide">
-      <p>togglable view</p>
-      <p>{blog.url}</p>
-      <p>{blog.likes} <button type="submit" onClick={() => handleLike(blog)} >like</button> </p>
-      <p>{blog.user ? blog.user.username  : ''}</p>
-      {blog.user && blog.user.username === username ? 
-      <button type="submit" onClick={() => handleRemove(blog)} >remove</button> : ''}
-      <br></br>
-    </Togglable>
-  </div>
   )
 }
 
