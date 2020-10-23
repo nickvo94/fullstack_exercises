@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Togglable from './Togglable'
 
 const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
@@ -9,6 +9,9 @@ const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
+
+  const [view, setView] = useState(false)
+
 
   const handleLike = (likedBlog) => {
     const updateBlog = { ...likedBlog, likes: likedBlog.likes +1 }
@@ -21,13 +24,9 @@ const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
     handleDeleteBlog(removingBlog)
   }
 
-  return (
-    <div style={blogStyle}>
+  const showWholeBlog = () => {
+    return(
       <div>
-        {blog.title} {blog.author}
-      </div>
-
-      <Togglable buttonLabel="view" buttonOffLabel="hide">
         <p>togglable view</p>
         <p>{blog.url}</p>
         <p>{blog.likes} <button type="submit" onClick={() => handleLike(blog)} >like</button> </p>
@@ -35,7 +34,18 @@ const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
         {blog.user && blog.user.username === username ?
           <button type="submit" onClick={() => handleRemove(blog)} >remove</button> : ''}
         <br></br>
-      </Togglable>
+      </div>
+    )
+  }
+
+  return (
+    <div style={blogStyle}>
+      <div>
+        {blog.title} {blog.author} 
+        <button type="submit" onClick={() => setView(!view)} > {view ? 'hide' : 'view'} </button>
+      </div>
+
+      {view && showWholeBlog()}
     </div>
   )
 }
