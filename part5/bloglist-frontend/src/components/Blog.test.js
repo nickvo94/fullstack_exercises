@@ -12,9 +12,13 @@ test('renders content', () => {
     important: true
   }
 
+  const mockHandler = jest.fn()
+
   const component = render(
-    <Blog blog={blog} />
+    <Blog blog={blog} handleUpdateBlog={mockHandler}/>
   )
+
+  const buttonView = component.getByText('view')
 
   component.debug()
 
@@ -31,8 +35,7 @@ test('renders content', () => {
     '4'
   )
 
-  const button = component.getByText('view')
-  fireEvent.click(button)
+  fireEvent.click(buttonView)
 
   component.debug()
 
@@ -43,5 +46,13 @@ test('renders content', () => {
   expect(component.container).toHaveTextContent(
     '4'
   )
+
+  const buttonLike = component.getByText('like')
+  fireEvent.click(buttonLike)
+  fireEvent.click(buttonLike)
+
+  console.log(mockHandler.mock.calls)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
 
 })
