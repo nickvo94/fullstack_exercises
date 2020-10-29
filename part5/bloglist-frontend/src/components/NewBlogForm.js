@@ -9,6 +9,7 @@ const NewBlogForm = ({ handleCreateBlog }) => {
       <div>
             title
         <input
+          id="title"
           type="text"
           value={newBlog.title}
           name="Title"
