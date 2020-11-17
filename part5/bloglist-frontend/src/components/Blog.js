@@ -29,7 +29,7 @@ const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
       <div>
         <p>togglable view</p>
         <p>{blog.url}</p>
-        <p>{blog.likes} <button type="submit" onClick={() => handleLike(blog)} >like</button> </p>
+        <p>likes : {blog.likes} <button type="submit" onClick={() => handleLike(blog)} >like</button> </p>
         <p>{blog.user ? blog.user.username  : ''}</p>
         {blog.user && blog.user.username === username ?
           <button type="submit" onClick={() => handleRemove(blog)} >remove</button> : ''}

@@ -16,7 +16,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "eslint": "eslint . --fix",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress": "start npm run cypress:open && start npm start && npm run backend",
+    "backend": "cd ../../part4 && npm run dev && cd ../../part5/bloglist-frontend/"
+
   },
   "eslintConfig": {
     "extends": "react-app"
