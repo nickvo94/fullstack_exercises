@@ -29,7 +29,7 @@ const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
       <div>
         <p>togglable view</p>
         <p>{blog.url}</p>
-        <p>likes : {blog.likes} <button type="submit" onClick={() => handleLike(blog)} >like</button> </p>
+        <p id="likes"> <span>{blog.likes}</span> <button type="submit" onClick={() => handleLike(blog)} >like</button> </p>
         <p>{blog.user ? blog.user.username  : ''}</p>
         {blog.user && blog.user.username === username ?
           <button type="submit" onClick={() => handleRemove(blog)} >remove</button> : ''}
@@ -39,14 +39,14 @@ const Blog = ({ blog, handleUpdateBlog, username, handleDeleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      <div>
+    <ul style={blogStyle}>
+      <li>
         {blog.title} {blog.author} 
         <button type="submit" onClick={() => setView(!view)} > {view ? 'hide' : 'view'} </button>
-      </div>
+      </li>
 
       {view && showWholeBlog()}
-    </div>
+    </ul>
   )
 }
 
