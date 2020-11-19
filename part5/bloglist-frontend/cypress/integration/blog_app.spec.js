@@ -85,13 +85,13 @@ describe('blog app', function() {
         })
 
         it('A blog can be deleted by own author', function() {
-          cy.get('li:first')
-            .contains('Canonical string reduction')
+          cy.get('li:last')
+            .contains('a blog created by cypress')
             .contains('view')
             .click()
           cy.contains('remove')
             .click()
-          cy.should('not.contain','Canonical string reduction')
+          cy.should('not.contain','a blog created by cypress')
 
           cy.contains('logout').click()
         })
