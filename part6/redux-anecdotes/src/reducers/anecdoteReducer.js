@@ -28,7 +28,7 @@ const reducer = (state = initialState, action) => {
       const id = action.data.id
       const anecdoteToChange = state.find(a => a.id === id )
       const changedAnecdote = {...anecdoteToChange, votes: anecdoteToChange.votes + 1}
-      return state.map(a => a.id !== id ? a : changedAnecdote )
+      return state.map(a => a.id !== id ? a : changedAnecdote ).sort((a, b) => Number(b.votes) - Number(a.votes))
     case 'ADD_ANECDOTE':
       return state.concat(asObject(action.data.content)) 
     default:
