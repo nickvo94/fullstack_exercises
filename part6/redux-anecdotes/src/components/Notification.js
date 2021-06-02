@@ -7,11 +7,17 @@ const Notification = () => {
   const style = {
     border: 'solid',
     padding: 10,
-    borderWidth: 1
+    margin: 10,
+    borderWidth: 1,
+    display: 'block',
+    color: 'blue'
   }
   return (
-    <div style={style}>
+    <div>
       {notification}
+      <div style={ notification ? style : {display: 'none'}}>
+        {notification}
+      </div>
     </div>
   )
 }

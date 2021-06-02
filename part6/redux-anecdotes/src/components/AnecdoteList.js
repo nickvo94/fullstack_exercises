@@ -1,6 +1,18 @@
+import { useSelector, useDispatch } from 'react-redux'
 import React from 'react'
+import filterReducer from '../reducers/filterReducer'
 
-const AnecdoteList = ({anecdotes, vote}) => {
+const AnecdoteList = ({vote}) => {
+  const anecdotes = useSelector(({filter, anecdotes}) => {
+    if (filter) {
+      console.log('in anecdote list, filter is ' , filter, ' anecdote is ', anecdotes )
+      return anecdotes.filter(anecdote => anecdote.content.includes(filter) )
+    }
+    else {
+      return anecdotes
+    }
+
+  }) 
 
   return (
     <div>
