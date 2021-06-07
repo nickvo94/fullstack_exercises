@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { addVote, addAnecdote } from './reducers/anecdoteReducer'
-import {notificationChange, notificationOff} from './reducers/notificationReducer'
+import {setNotification} from './reducers/notificationReducer'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
@@ -13,16 +13,22 @@ const App = () => {
   //const anecdotes = useSelector(state => state.anecdotes)
   const dispatch = useDispatch()
 
-  useEffect(() => {
+/*   useEffect(() => {
     anecdoteService
       .getAll().then(anecdotes => dispatch(initializeAnecdotes(anecdotes)))
-  }, [dispatch])
+  }, [dispatch]) */
 
-  const vote = (id) => {
-    console.log('vote', id)
-    dispatch(addVote(id))
-    dispatch(notificationChange('add vote'))
-    setTimeout(() => {dispatch(notificationOff({}))},5000)
+  useEffect(() => {
+    dispatch(initializeAnecdotes()) 
+  },[dispatch]) 
+
+  const vote = (anecdote) => {
+    console.log('vote', anecdote.id)
+    dispatch(addVote(anecdote.id)).
+      then(
+        dispatch(setNotification(`you voted '${anecdote.content}'`, 1000))
+      )
+    //setTimeout(() => {dispatch(notificationOff({}))},5000)
   }
 
   return (

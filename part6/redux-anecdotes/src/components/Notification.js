@@ -14,7 +14,6 @@ const Notification = () => {
   }
   return (
     <div>
-      {notification}
       <div style={ notification ? style : {display: 'none'}}>
         {notification}
       </div>

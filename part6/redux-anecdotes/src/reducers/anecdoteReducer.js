@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
+import anecdoteService from '../services/anecdotes'
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -19,7 +20,10 @@ const asObject = (anecdote) => {
   }
 }
 
+// not current in use
 const initialState = anecdotesAtStart.map(asObject)
+
+//const dispatch = useDispatch()
 
 const anecdoteReducer = (state = [], action) => {
   console.log('state now: ', state)
@@ -29,7 +33,7 @@ const anecdoteReducer = (state = [], action) => {
     case 'ADD_VOTE':
       const id = action.data.id
       const anecdoteToChange = state.find(a => a.id === id )
-      const changedAnecdote = {...anecdoteToChange, votes: anecdoteToChange.votes + 1}
+      const changedAnecdote = {...anecdoteToChange, votes: action.data.votes}
       return state.map(a => a.id !== id ? a : changedAnecdote ).sort((a, b) => Number(b.votes) - Number(a.votes))
     case 'ADD_ANECDOTE':
       return state.concat(asObject(action.data.content))
@@ -43,9 +47,14 @@ const anecdoteReducer = (state = [], action) => {
 }
 
 export const addVote = (id) => {
-  return {
-    type: 'ADD_VOTE',
-    data: {id}
+  return async dispatch => {
+    const response = await anecdoteService.updateVote(id)
+    console.log(response)
+    dispatch({
+      type: 'ADD_VOTE',
+      data: response
+    })
+    
   }
 }
 
@@ -57,10 +66,13 @@ export const addAnecdote = (content) => {
   }
 }
 
-export const createAnecdote = (data) => {
-  return {
-    type: 'NEW_ANECDOTE',
-    data,
+export const createAnecdote = (content) => {
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.createNew(content)
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      data: newAnecdote,
+    })
   }
 }
 
@@ -71,10 +83,14 @@ export const filterAnecdote = (value) => {
   }
 }
 
-export const initializeAnecdotes = (anecdotes) => {
-  return {
-    type: 'INIT_ANECDOTES',
-    data: anecdotes,
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll() 
+    dispatch({
+      type: 'INIT_ANECDOTES',
+      data: anecdotes,
+    })
+    //console.log('init anecdotes are  ', anecdotes)
   }
 }
 

@@ -1,3 +1,7 @@
+import { useSelector, useDispatch } from 'react-redux'
+
+//const dispatch = useDispatch()
+
 const notificationReducer = (state = '', action) => {
   console.log(action)
     switch (action.type) {
@@ -10,14 +14,18 @@ const notificationReducer = (state = '', action) => {
     }
   }
   
-export const notificationChange = (notification) => {
-  return {
-    type: 'SET_NOTIFICATION',
-    notification,
+export const setNotification = (notification, time) => {
+  return async dispatch => {
+    await dispatch({
+      type: 'SET_NOTIFICATION',
+      notification,
+    })
+    setTimeout(() => {dispatch(clearNotification())}, time)
   }
 }
 
-export const notificationOff = () => {
+const clearNotification = () => {
+  console.log('clear notif called')
   return {
     type: 'OFF_NOTIFICATION',
     notification: null,
