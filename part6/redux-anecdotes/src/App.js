@@ -4,7 +4,7 @@ import { addVote, addAnecdote } from './reducers/anecdoteReducer'
 import {setNotification} from './reducers/notificationReducer'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
-import Notification from './components/Notification'
+import ConnectedNotification from './components/Notification'
 import Filter from './components/Filter'
 import anecdoteService from './services/anecdotes'
 import {initializeAnecdotes} from './reducers/anecdoteReducer'
@@ -26,7 +26,7 @@ const App = () => {
     console.log('vote', anecdote.id)
     dispatch(addVote(anecdote.id)).
       then(
-        dispatch(setNotification(`you voted '${anecdote.content}'`, 1000))
+        dispatch(setNotification(`you voted '${anecdote.content}'`, 5000))
       )
     //setTimeout(() => {dispatch(notificationOff({}))},5000)
   }
@@ -36,7 +36,7 @@ const App = () => {
       <h2>Anecdotes</h2>
       <Filter/>
       <AnecdoteList vote={vote} />
-      <Notification />
+      <ConnectedNotification />
       <AnecdoteForm />
     </div>
   )

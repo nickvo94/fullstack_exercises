@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 
 //const dispatch = useDispatch()
+let timer = null
 
 const notificationReducer = (state = '', action) => {
   console.log(action)
@@ -20,12 +21,16 @@ export const setNotification = (notification, time) => {
       type: 'SET_NOTIFICATION',
       notification,
     })
-    setTimeout(() => {dispatch(clearNotification())}, time)
+    if(timer){
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {dispatch(clearNotification())}, time)
   }
 }
 
 const clearNotification = () => {
   console.log('clear notif called')
+  timer = null
   return {
     type: 'OFF_NOTIFICATION',
     notification: null,
